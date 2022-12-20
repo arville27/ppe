@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  ppe:
+    container_name: ppe
+    image: arville27/ppe:latest
+    build:
+      context: .
+      args:
+        - RELEASE=${PPE_RELEASE_VERSION}
+    user: ${UID}:${GID}
+    volumes:
+      - ./data:/ppe/data
+    ports:
+      - 8000:80
+    restart: always
+
+  sftp:
+    container_name: sftp
+    image: atmoz/sftp:alpine
+    volumes:
+        - ./data:/home/${SFTP_USER}/upload
+    ports:
+        - "2222:22"
+    command: ${SFTP_USER}:${SFTP_PASS}:${UID}
